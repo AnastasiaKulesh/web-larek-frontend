@@ -9,6 +9,7 @@ export interface ICard {
 
 export interface ICardsList {
     cards: ICard[];
+    getCardById(id: string): ICard;
 }
 
 export interface ICustomer {
