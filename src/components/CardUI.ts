@@ -15,6 +15,7 @@ export class CardUI {
     protected imageElement: HTMLImageElement;
     protected priceElement: HTMLElement;
     protected basketItemElement: HTMLElement;
+    protected handleOpenDetailPopup: Function;
 
     constructor (template: HTMLTemplateElement) {
         this.cardElement = template.content.querySelector('.card').cloneNode(true) as HTMLElement;
@@ -34,6 +35,13 @@ export class CardUI {
         if (this.priceElement != null) (card.price == null) ? this.priceElement.textContent = 'Бесценно' : this.priceElement.textContent = `${card.price} cинапсов`;
         if (this.basketItemElement != null) this.basketItemElement.textContent = `${idx+1}`;
         return this.cardElement;
+    }
+
+    setDetailHandler(handleOpenDetailPopup: Function, card: ICard) {
+        this.handleOpenDetailPopup = handleOpenDetailPopup;
+        this.cardElement.addEventListener('click', (event) => {
+            this.handleOpenDetailPopup(card);
+        }) 
     }
 }
 

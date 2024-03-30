@@ -31,3 +31,9 @@ export interface IBasket {
     deleteItem(item: ICard): void;
     makeOrder(): boolean;
 }
+
+export interface IPopup {
+    content: HTMLElement;
+    open(): void;
+    close(): void;
+}
