@@ -1,17 +1,17 @@
-interface ICard {
+export interface ICard {
     id: string;
     category: string;
-    name: string;
+    title: string;
     description: string;
     price: number;
     image: string;
 }
 
-interface ICardsList {
+export interface ICardsList {
     cards: ICard[];
 }
 
-interface ICustomer {
+export interface ICustomer {
     paymentType: 'online' | 'offline';
     address: string;
     email: string;
@@ -22,7 +22,7 @@ interface ICustomer {
     setPhone(phone: string): void;
 }
 
-interface IBasket {
+export interface IBasket {
     items: ICard[];
     get сountItems(): void;
     get costItems(): void;
