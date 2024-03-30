@@ -14,6 +14,7 @@ export class CardUI {
     protected descriptionElement: HTMLElement;
     protected imageElement: HTMLImageElement;
     protected priceElement: HTMLElement;
+    protected basketItemElement: HTMLElement;
 
     constructor (template: HTMLTemplateElement) {
         this.cardElement = template.content.querySelector('.card').cloneNode(true) as HTMLElement;
@@ -22,14 +23,16 @@ export class CardUI {
         this.descriptionElement = this.cardElement.querySelector('.card__text');
         this.imageElement = this.cardElement.querySelector('.card__image');
         this.priceElement = this.cardElement.querySelector('.card__price');
+        this.basketItemElement = this.cardElement.querySelector('.basket__item-index');
     }
 
-    render(card: ICard) {
-        this.categoryElement.textContent = card.category;
-        this.nameElement.textContent = card.title;
-        if(this.descriptionElement != null)this.descriptionElement.textContent = card.description;
-        this.imageElement.src = `${CDN_URL}/${card.image}`;
-        this.priceElement.textContent = `${card.price} cинапсов`;
+    render(card: ICard, idx: number) {
+        if (this.categoryElement != null) this.categoryElement.textContent = card.category;
+        if (this.nameElement != null) this.nameElement.textContent = card.title;
+        if (this.descriptionElement != null) this.descriptionElement.textContent = card.description;
+        if (this.imageElement != null) this.imageElement.src = `${CDN_URL}/${card.image}`;
+        if (this.priceElement != null) (card.price == null) ? this.priceElement.textContent = 'Бесценно' : this.priceElement.textContent = `${card.price} cинапсов`;
+        if (this.basketItemElement != null) this.basketItemElement.textContent = `${idx+1}`;
         return this.cardElement;
     }
 }

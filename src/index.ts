@@ -6,7 +6,7 @@ import { cardListFromAPI } from './utils/constants';
 
 const contentElement = document.querySelector('.gallery');
 
-const cardTemplate = document.querySelector('#card-catalog') as HTMLTemplateElement;
+const cardTemplate = document.querySelector('#card-basket') as HTMLTemplateElement;
 
 
 
@@ -16,6 +16,6 @@ cardList.cards = cardListFromAPI.items;
 cardList.cards.forEach((item, i) => {
     const card = new CardUI(cardTemplate);
     const catalog: ICard = item;
-    contentElement.prepend(card.render(catalog));
+    contentElement.append(card.render(catalog, i));
 
 })
