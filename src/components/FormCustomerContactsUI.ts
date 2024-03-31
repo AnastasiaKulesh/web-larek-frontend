@@ -1,6 +1,7 @@
 import { ICustomer } from "../types";
+import { EventEmitter } from "./base/events";
 
-export class FormCustomerContactsUI {
+export class FormCustomerContactsUI extends EventEmitter{
     protected formElement: HTMLFormElement;
     protected inputEmailElement: HTMLInputElement;
     protected inputPhoneElement: HTMLInputElement;
@@ -8,6 +9,7 @@ export class FormCustomerContactsUI {
     protected customer: ICustomer;
 
     constructor(formTemplate: HTMLTemplateElement, customerData: ICustomer) {
+        super();
         this.formElement = formTemplate.content.querySelector('.form').cloneNode(true) as HTMLFormElement;
         this.inputEmailElement = this.formElement.querySelector('input[name="email"]');
         this.inputPhoneElement = this.formElement.querySelector('input[name="phone"]');
@@ -27,6 +29,7 @@ export class FormCustomerContactsUI {
 
         this.buttonSubmitElement.addEventListener('click', (event) => {
             event.preventDefault();
+            this.emit('makeOrderSubmit');
         })
 
         this.validate();
