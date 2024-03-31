@@ -1,4 +1,4 @@
-import { ICard, ICardsList } from "../types";
+import { ICard, ICardsList } from "../../types";
 
 
 export class CardListModel implements ICardsList {

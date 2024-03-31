@@ -1,6 +1,7 @@
 import { IBasket } from "../types";
+import { EventEmitter } from "./base/events";
 
-export class BasketUI {
+export class BasketUI extends EventEmitter {
     protected basketElement: HTMLElement;
     protected basketListElement: HTMLElement;
     protected basketButtonElement: HTMLButtonElement;
@@ -10,10 +11,15 @@ export class BasketUI {
 
 
     constructor(template: HTMLTemplateElement) {
+        super();
         this.basketElement = template.content.querySelector('.basket').cloneNode(true) as HTMLElement;
         this.basketListElement = this.basketElement.querySelector('.basket__list');
         this.basketButtonElement = this.basketElement.querySelector('.basket__button');
-        this.basketPriceElement = this.basketElement.querySelector('.basket__price');      
+        this.basketPriceElement = this.basketElement.querySelector('.basket__price');   
+        
+        this.basketButtonElement.addEventListener('click', () => {
+            this.emit('makeOrder')
+        })
     }
 
     render(items: HTMLElement[], basket: IBasket) {

@@ -10,7 +10,7 @@ export class PageUI extends EventEmitter {
         this._catalog = document.querySelector('.gallery');
         this._basketButton = document.querySelector('.header__basket')
         this._countBasketItems = this._basketButton.querySelector('.header__basket-counter');
-    
+
         this._basketButton.addEventListener('click', (event) => {
             this.emit('openBasketPopup');
         })

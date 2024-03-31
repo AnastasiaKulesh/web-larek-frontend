@@ -1,4 +1,4 @@
-import { ICustomer } from "../types";
+import { ICustomer } from "../../types";
 
 export class CustomerModel implements ICustomer {
     protected _address: string;

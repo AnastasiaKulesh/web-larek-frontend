@@ -41,20 +41,16 @@ export class FormCustomerContactsUI extends EventEmitter{
 
     setEmail(email: string) {
         this.customer.setEmail(email);
-        console.log(this.customer);
         this.validate();
     }
 
     setPhone(phone: string) {
         this.customer.setPhone(phone);
-        console.log(this.customer);
         this.validate();
     }
 
     validate() {
-        this.buttonSubmitElement.disabled = !((this.customer.email != '')&&(this.customer.phone.length > 10));
-        console.log(((this.customer.email != '')&&(this.customer.phone.length > 10)));
-        
+        this.buttonSubmitElement.disabled = !((this.customer.email != '')&&(this.customer.phone.length > 10));        
     }
 
 

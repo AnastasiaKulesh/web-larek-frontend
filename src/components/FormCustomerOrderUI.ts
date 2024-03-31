@@ -62,11 +62,8 @@ export class FormCustomerOrderUI extends EventEmitter{
         this.validate()
     }    
 
-    validate() {
-        console.log(this.customer);
-        
+    validate() {      
         this.buttonSubmitElement.disabled = !((this.customer.address != '')&&(this.customer.paymentType != undefined));
-        
     }
 
 

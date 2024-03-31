@@ -1,5 +1,5 @@
-import { IBasket, ICard, ICardsList } from "../types";
-import { EventEmitter } from "./base/events";
+import { IBasket, ICard, ICardsList } from "../../types";
+import { EventEmitter } from "../base/events";
 
 export class BasketModel extends EventEmitter implements IBasket {
     protected _items: ICard[];
@@ -34,7 +34,6 @@ export class BasketModel extends EventEmitter implements IBasket {
 
     deleteItem(id: string) {
         this._items = this._items.filter(item => item.id != id);
-        console.log(this._items);
         this.emit('changeCountItem');
     }
 
