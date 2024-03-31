@@ -21,6 +21,7 @@ export interface ICustomer {
     setAddress(address: string): void;
     setEmail(email: string): void;
     setPhone(phone: string): void;
+    // validate(inputElement: HTMLElement): boolean;
 }
 
 export interface IBasket {

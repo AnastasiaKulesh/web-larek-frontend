@@ -1,0 +1,58 @@
+import { ICustomer } from "../types";
+
+export class FormCustomerContactsUI {
+    protected formElement: HTMLFormElement;
+    protected inputEmailElement: HTMLInputElement;
+    protected inputPhoneElement: HTMLInputElement;
+    protected buttonSubmitElement: HTMLButtonElement;
+    protected customer: ICustomer;
+
+    constructor(formTemplate: HTMLTemplateElement, customerData: ICustomer) {
+        this.formElement = formTemplate.content.querySelector('.form').cloneNode(true) as HTMLFormElement;
+        this.inputEmailElement = this.formElement.querySelector('input[name="email"]');
+        this.inputPhoneElement = this.formElement.querySelector('input[name="phone"]');
+        this.buttonSubmitElement = this.formElement.querySelector('button[type="submit"]');
+    
+        this.customer = customerData;
+        this.inputEmailElement.value = this.customer.email;
+        this.inputPhoneElement.value = this.customer.phone;
+        
+        this.inputEmailElement.addEventListener('change', (event) => {
+            this.setEmail(this.inputEmailElement.value);
+        })
+
+        this.inputPhoneElement.addEventListener('change', (event) => {
+            this.setPhone(this.inputPhoneElement.value);
+        })
+
+        this.buttonSubmitElement.addEventListener('click', (event) => {
+            event.preventDefault();
+        })
+
+        this.validate();
+    }
+
+    render() {
+        return this.formElement;
+    }
+
+    setEmail(email: string) {
+        this.customer.setEmail(email);
+        console.log(this.customer);
+        this.validate();
+    }
+
+    setPhone(phone: string) {
+        this.customer.setPhone(phone);
+        console.log(this.customer);
+        this.validate();
+    }
+
+    validate() {
+        this.buttonSubmitElement.disabled = !((this.customer.email != '')&&(this.customer.phone.length > 10));
+        console.log(((this.customer.email != '')&&(this.customer.phone.length > 10)));
+        
+    }
+
+
+}

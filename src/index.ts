@@ -2,6 +2,9 @@ import { BasketModel } from './components/BasketModel';
 import { BasketUI } from './components/BasketUI';
 import { CardListModel } from './components/CardList';
 import { CardUI } from './components/CardUI';
+import { CustomerModel } from './components/CustomerModel';
+import { FormCustomerContactsUI } from './components/FormCustomerContactsUI';
+import { FormCustomerOrderUI } from './components/FormCustomerOrderUI';
 import { PopupUI } from './components/PopupUI';
 import './scss/styles.scss';
 import { IBasket, ICard } from './types';
@@ -76,9 +79,32 @@ function fillBasketContent(basketPopup: PopupUI, basket: IBasket) {
     basketPopup.content = basketUI.render(basketItems, basket);
 }
 
+const customer = new CustomerModel();
+customer.setEmail('test@mail.ru')
+
 // Доработать
 function makeOrder() {
     basketPopup.close();
+
+    const customerTemplate = document.querySelector('#order') as HTMLTemplateElement;
+    const customerUI = new FormCustomerOrderUI(customerTemplate, customer);
+    let customerPopup = new PopupUI(document.querySelector('#modal-container') as HTMLElement);
+
+    customerPopup.content = customerUI.render();
+    customerUI.on('next', () => {
+        console.log('click next');
+        customerPopup.close();
+
+        const customerTemplate = document.querySelector('#contacts') as HTMLTemplateElement;
+        const customerUI = new FormCustomerContactsUI(customerTemplate, customer);
+        customerPopup = new PopupUI(document.querySelector('#modal-container') as HTMLElement);
+    
+        customerPopup.content = customerUI.render();
+        customerPopup.open();    
+        
+    })
+    customerPopup.open();
+    
 }
 
  
