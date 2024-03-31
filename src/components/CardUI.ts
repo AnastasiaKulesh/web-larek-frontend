@@ -2,12 +2,6 @@ import { ICard } from "../types";
 import { CDN_URL } from "../utils/constants";
 
 export class CardUI {
-    protected _id: string;
-    protected _category: string;
-    protected _name: string;
-    protected _description: string;
-    protected _price: number;
-    protected _image: string;
     protected cardElement: HTMLElement;
     protected categoryElement: HTMLElement;
     protected nameElement: HTMLElement;
@@ -15,7 +9,12 @@ export class CardUI {
     protected imageElement: HTMLImageElement;
     protected priceElement: HTMLElement;
     protected basketItemElement: HTMLElement;
+    protected addBasketItemButton: HTMLButtonElement;
+    protected deleteBasketItemButton: HTMLButtonElement;
+
     protected handleOpenDetailPopup: Function;
+    protected handleAddItemBasket: Function;
+    protected handleDeleteItemBasket: Function;
 
     constructor (template: HTMLTemplateElement) {
         this.cardElement = template.content.querySelector('.card').cloneNode(true) as HTMLElement;
@@ -25,6 +24,8 @@ export class CardUI {
         this.imageElement = this.cardElement.querySelector('.card__image');
         this.priceElement = this.cardElement.querySelector('.card__price');
         this.basketItemElement = this.cardElement.querySelector('.basket__item-index');
+        this.addBasketItemButton = this.cardElement.querySelector('.card__button');
+        this.deleteBasketItemButton = this.cardElement.querySelector('.basket__item-delete');
     }
 
     render(card: ICard, idx: number) {
@@ -43,13 +44,22 @@ export class CardUI {
             this.handleOpenDetailPopup(card);
         }) 
     }
-}
 
-// <template id="card-catalog">
-// 		<button class="gallery__item card">
-// 			<span class="card__category card__category_soft">софт-скил</span>
-// 			<h2 class="card__title">+1 час в сутках</h2>
-// 			<img class="card__image" src="<%=require('../images/Subtract.svg')%>" alt="" />
-// 			<span class="card__price">750 синапсов</span>
-// 		</button>
-// 	</template>
+    setAddItemBasketHandler(handleAddItemBasket: Function, card: ICard) {
+        if (this.addBasketItemButton === null) return;
+
+        this.handleAddItemBasket = handleAddItemBasket;
+        this.addBasketItemButton.addEventListener('click', (event) => {
+            this.handleAddItemBasket(card);
+        })
+    }
+
+    setDeleteBasketItemHandler(handleDeleteItemBasket: Function, card: ICard) {
+        if (this.deleteBasketItemButton === null) return;
+
+        this.handleDeleteItemBasket = handleDeleteItemBasket;
+        this.deleteBasketItemButton.addEventListener('click', (event) => {
+            this.handleDeleteItemBasket(card);
+        })
+    }
+}

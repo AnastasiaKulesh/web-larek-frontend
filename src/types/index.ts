@@ -25,11 +25,11 @@ export interface ICustomer {
 
 export interface IBasket {
     items: ICard[];
-    get сountItems(): void;
-    get costItems(): void;
+    readonly countItems: number;
+    readonly costItems: number;
     addItem(item: ICard): void;
-    deleteItem(item: ICard): void;
-    makeOrder(): boolean;
+    deleteItem(id: string): void;
+    clear(): void;
 }
 
 export interface IPopup {
