@@ -5,6 +5,7 @@ import { CardUI } from './components/CardUI';
 import { CustomerModel } from './components/CustomerModel';
 import { FormCustomerContactsUI } from './components/FormCustomerContactsUI';
 import { FormCustomerOrderUI } from './components/FormCustomerOrderUI';
+import { PageUI } from './components/PageUI';
 import { PopupUI } from './components/PopupUI';
 import { SuccessUI } from './components/SuccessUI';
 import { Api } from './components/base/api';
@@ -14,29 +15,31 @@ import { API_URL } from './utils/constants';
 
 const api = new Api(API_URL);
 
-const contentElement = document.querySelector('.gallery');
+
+const page = new PageUI();
 
 const cardTemplate = document.querySelector('#card-catalog') as HTMLTemplateElement;
 
 const basket = new BasketModel();
+basket.on('changeCountItem', () => {
+    page.counter = basket.countItems;
+})
 
-// Элемент корзины в шапке - позже перенести в класс
-const headerBasketCounter = document.querySelector('.header__basket-counter') as HTMLElement;
 
-
-
+// Рендер каталога товаров
 const cardList = new CardListModel();
 api.get('/product').then(res => {
     const resJson = JSON.parse(JSON.stringify(res));
 
     cardList.cards = resJson.items;
     
-    cardList.cards.forEach((item, i) => {
+    const cardsListItems: HTMLElement[] = cardList.cards.map((item, i) => {
         const card = new CardUI(cardTemplate);
-        const catalog: ICard = item;
-        contentElement.append(card.render(catalog, i));
         card.setDetailHandler(handleOpenDetailPopup, item)
+        return card.render(item, i);
     })
+
+    page.catalog = cardsListItems;
 })
 
 
@@ -54,13 +57,11 @@ function handleOpenDetailPopup(item: ICard ) {
 }
 
 function handleAddItemBasket(item: ICard) {
-    basket.addItem(item);
-    headerBasketCounter.innerText = basket.countItems.toString();
+    basket.addItem(item);    
 }
 
 function handleDeleteItemBasket(item: ICard) {
     basket.deleteItem(item.id);
-    headerBasketCounter.innerText = basket.countItems.toString();
     fillBasketContent(basketPopup, basket);    
 }
 
@@ -133,8 +134,7 @@ function sendOrder() {
     api.post('/order', data, 'POST')
         .then(res => {
             basket.clear();
-            headerBasketCounter.innerText = '0';
-            
+
             const resJson = JSON.parse(JSON.stringify(res));
             const successTemplate = document.querySelector('#success') as HTMLTemplateElement;
             const successUI = new SuccessUI(successTemplate);
