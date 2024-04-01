@@ -77,9 +77,6 @@ yarn build
 Геттеры / сеттеры:
  - cards: get - получает массив карточек, set - сохраняет массив карточек
 
-Методы:
- - getCardById(id: string): получает данные карточки по ID. Возвращает данные карточки интерфеса ICard.
-
 ## Класс CustomerModel
 Отвечает за хранение данных заказа.
 
@@ -102,6 +99,7 @@ yarn build
  - setAddress(address: string): устанавливает адрес доставки;
  - setEmail(email: string): устанавливает E-mail покупателя;
  - setPhone(phone: string): устанавливает номер телефона;
+ - clear(): очищает введенные данные покупателя
 
 ## Класс BasketModel
 Отвечает за хранение и работу с выбранным списком товаров.
@@ -114,14 +112,15 @@ yarn build
 Конструктор - пустой, не принимает свойства.
 
 Геттеры:
- - сountItems(): number - возвращает количество выбранных товаров
- - costItems(): number - возвращает итоговую стоимость заказа
+ - сountItems(): number - возвращает количество выбранных товаров;
+ - costItems(): number - возвращает итоговую стоимость заказа;
  - items(): ICard[] - получает список выбранных товаров
 
 Методы:
- - addItem(item: ICard): добавляет карточку в корзину
- - deleteItem(id: string): удаляет карточку по ее ID
- - clear(): очищает корзину
+ - addItem(item: ICard): добавляет карточку в корзину;
+ - deleteItem(id: string): удаляет карточку по ее ID;
+ - clear(): очищает корзину;
+ - checkItemById(id: string): boolean - проверяет наличие товара в корзине по его ID.
 
 
 
@@ -153,7 +152,7 @@ yarn build
  - template: HTMLElement - теплейт для вывода карточки товара
 
 Методы:
- - render(card: ICard, idx: number): HTMLElement - возвращает разметку карточки товара согласно переданному template
+ - render(card: ICard, idx: number = 0, buttonIsDisabled: boolean = false): HTMLElement - возвращает разметку карточки товара согласно переданному template
  - setDetailHandler(handleOpenDetailPopup: Function, card: ICard): void - устанавливает обработчик нажатия на карточку для открытия popup с детальной информацией
  - setAddItemBasketHandler(handleAddItemBasket: Function, card: ICard): void - устанавливает обработчик на кнопку "В корзину" для добавления товара в корзину
  - setDeleteBasketItemHandler(handleDeleteItemBasket: Function, card: ICard): void - устанавливает обработчик на кнопку удаления товара и вызывает соответствующую функцию

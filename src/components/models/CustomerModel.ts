@@ -29,6 +29,13 @@ export class CustomerModel implements ICustomer {
         this._phone = phone;
     }
 
+    clear() {
+        this.setPaymentType('online');
+        this.setAddress('');
+        this.setEmail('');
+        this.setPhone('');
+    }
+
     get paymentType() {
         return this._paymentType;
     }

@@ -15,8 +15,4 @@ export class CardListModel implements ICardsList {
     get cards() {
         return this._cards;
     }
-
-    getCardById(id: string): ICard {
-        return this._cards.find(item => item.id === id);
-    }
 } 

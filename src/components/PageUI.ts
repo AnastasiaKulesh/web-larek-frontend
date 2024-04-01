@@ -21,10 +21,7 @@ export class PageUI extends EventEmitter {
     }
 
     set catalog(items: HTMLElement[]) {
-        this._catalog.innerHTML = '';
-        items.forEach((item) => {
-            this._catalog.append(item);
-        })
+        this._catalog.replaceChildren(...items);
     }
 
 

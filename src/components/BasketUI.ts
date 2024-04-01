@@ -23,8 +23,9 @@ export class BasketUI extends EventEmitter {
     }
 
     render(items: HTMLElement[], basket: IBasket) {
-        this.basketListElement.append(...items);
+        this.basketListElement.replaceChildren(...items);
         this.basketPriceElement.textContent = `${basket.costItems} синапсов`;
+        this.basketButtonElement.disabled = (items.length === 0);
         return this.basketElement;
     }
 
@@ -36,12 +37,4 @@ export class BasketUI extends EventEmitter {
             this.handleOrder();
         })
     }
-
-// (handleDeleteItemBasket: Function, card: ICard) {
-//     if (this.deleteBasketItemButton === null) return;
-
-//     this.handleDeleteItemBasket = handleDeleteItemBasket;
-//     this.deleteBasketItemButton.addEventListener('click', (event) => {
-//         this.handleDeleteItemBasket(card);
-//     })
 }

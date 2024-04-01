@@ -48,7 +48,7 @@ export class FormCustomerContactsUI extends EventEmitter{
         this.customer.setPhone(phone);
         this.validate();
     }
-
+    
     validate() {
         this.buttonSubmitElement.disabled = !((this.customer.email != '')&&(this.customer.phone.length > 10));        
     }

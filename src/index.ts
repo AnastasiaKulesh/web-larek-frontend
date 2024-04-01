@@ -21,7 +21,22 @@ page.on('openBasketPopup', () => {
     openBasketPopup();
 })
 
+const popupContainer = document.querySelector('#modal-container') as HTMLElement; 
+const modalPopup = new PopupUI(popupContainer);
+
 const cardTemplate = document.querySelector('#card-catalog') as HTMLTemplateElement;
+const cardPreviewTemplate = document.querySelector('#card-preview') as HTMLTemplateElement;
+const cardBasketTemplate = document.querySelector('#card-basket') as HTMLTemplateElement;
+
+const basketTemplate = document.querySelector('#basket') as HTMLTemplateElement;
+
+const customerOrderTemplate = document.querySelector('#order') as HTMLTemplateElement;
+const customerContactTemplate = document.querySelector('#contacts') as HTMLTemplateElement;
+
+const successTemplate = document.querySelector('#success') as HTMLTemplateElement;
+
+const customer = new CustomerModel();
+
 
 const basket = new BasketModel();
 basket.on('changeCountItem', () => {
@@ -29,96 +44,86 @@ basket.on('changeCountItem', () => {
 })
 
 
+
+
 // Рендер каталога товаров
 const cardList = new CardListModel();
-api.get('/product').then(res => {
-    const resJson = JSON.parse(JSON.stringify(res));
+api.get('/product')
+    .then(res => {
+        const resJson = JSON.parse(JSON.stringify(res));
 
-    cardList.cards = resJson.items;
-    
-    const cardsListItems: HTMLElement[] = cardList.cards.map((item, i) => {
-        const card = new CardUI(cardTemplate);
-        card.setDetailHandler(handleOpenDetailPopup, item)
-        return card.render(item, i);
+        cardList.cards = resJson.items;
+        
+        const cardsListItems: HTMLElement[] = cardList.cards.map((item, i) => {
+            const card = new CardUI(cardTemplate);
+            card.setDetailHandler(handleOpenDetailPopup, item)
+            return card.render(item, i);
+        })
+
+        page.catalog = cardsListItems;
     })
+    .catch((err) => console.log(`ERROR: ${err}`));
 
-    page.catalog = cardsListItems;
-})
-
-
+// Функция открытия popup с детальной информацией карточки
 function handleOpenDetailPopup(item: ICard ) {
-    const popupContainer = document.querySelector('#modal-container') as HTMLElement; 
-    const cardPopup = new PopupUI(popupContainer);
-    const cardTemplate = document.querySelector('#card-preview') as HTMLTemplateElement;
-
-    const card = new CardUI(cardTemplate);
+    const card = new CardUI(cardPreviewTemplate);
     card.setAddItemBasketHandler(handleAddItemBasket, item);
 
-    cardPopup.content = card.render(item, 0);
+    modalPopup.content = card.render(item, 0, basket.checkItemById(item.id));
 
-    cardPopup.open();
+    modalPopup.open();
 }
 
+// Функция добавления товара в корзину
 function handleAddItemBasket(item: ICard) {
     basket.addItem(item);    
+    modalPopup.close();
 }
 
+// Функция удаления товара из корзины
 function handleDeleteItemBasket(item: ICard) {
     basket.deleteItem(item.id);
-    fillBasketContent(basketPopup, basket);    
+    fillBasketContent(modalPopup, basket);    
 }
-
-let basketPopup: PopupUI;
 
 // Открыть popup по нажатию на корзину
 function openBasketPopup() {
-    basketPopup = new PopupUI(document.querySelector('#modal-container') as HTMLElement);
-    fillBasketContent(basketPopup, basket);
-    basketPopup.open();
+    fillBasketContent(modalPopup, basket);
+    modalPopup.open();
 }
 
-
+// Функция заполнения содержимым popup корзины
 function fillBasketContent(basketPopup: PopupUI, basket: IBasket) {
-    const basketTemplate = document.querySelector('#basket') as HTMLTemplateElement;
     const basketUI = new BasketUI(basketTemplate);
     basketUI.on('makeOrder', () => {
         basketPopup.close();
         makeOrder();
     })
     const basketItems: HTMLElement[] = basket.items.map((item, i) => {
-        const card = new CardUI(document.querySelector('#card-basket') as HTMLTemplateElement);
+        const card = new CardUI(cardBasketTemplate);
         card.setDeleteBasketItemHandler(handleDeleteItemBasket, item);
         return card.render(item, i);
     })
     basketPopup.content = basketUI.render(basketItems, basket);
 }
 
-const customer = new CustomerModel();
-
-// Доработать
+// Функция открытия popup оформления заказа
 function makeOrder() {
-    const customerTemplate = document.querySelector('#order') as HTMLTemplateElement;
-    const customerUI = new FormCustomerOrderUI(customerTemplate, customer);
-    let customerPopup = new PopupUI(document.querySelector('#modal-container') as HTMLElement);
-
-    customerPopup.content = customerUI.render();
-    customerPopup.open();
+    const customerUI = new FormCustomerOrderUI(customerOrderTemplate, customer);
+    modalPopup.content = customerUI.render();
+    modalPopup.open();
     
     customerUI.on('next', () => {
-        customerPopup.close();
-
-        const customerTemplate = document.querySelector('#contacts') as HTMLTemplateElement;
-        const customerUI = new FormCustomerContactsUI(customerTemplate, customer);
-        customerPopup = new PopupUI(document.querySelector('#modal-container') as HTMLElement);
-        
+        modalPopup.close();
+        const customerUI = new FormCustomerContactsUI(customerContactTemplate, customer);
         customerUI.on('makeOrderSubmit', () => {
-            customerPopup.close();
             sendOrder()})
-        customerPopup.content = customerUI.render();
-        customerPopup.open();
+            modalPopup.content = customerUI.render();
+            modalPopup.open();
     })
 }
 
+// Функция отправки заказа на сервер
 function sendOrder() {
     const data = {
         "payment": customer.paymentType,
@@ -126,26 +131,25 @@ function sendOrder() {
         "phone": customer.phone,
         "address": customer.address,
         "total": basket.costItems,
-        "items": basket.items.map((item) => {
+        "items": basket.items.filter(item => item.price != null).map((item) => {
             return item.id
         })
-      };
+    };
 
     api.post('/order', data, 'POST')
         .then(res => {
             basket.clear();
+            customer.clear();
+            modalPopup.close();
 
             const resJson = JSON.parse(JSON.stringify(res));
-            const successTemplate = document.querySelector('#success') as HTMLTemplateElement;
             const successUI = new SuccessUI(successTemplate);
-            const successPopup = new PopupUI(document.querySelector('#modal-container') as HTMLElement);
-
-            successPopup.content = successUI.render(resJson.total);
-            successPopup.open();
+            modalPopup.content = successUI.render(resJson.total);
+            modalPopup.open();
 
             successUI.on('closeSuccessPopup', () => {
-                successPopup.close();
+                modalPopup.close();
             })
-        }
-    ) 
-}
+        }) 
+        .catch((err) => console.log(`ERROR: ${err}`));
+    }

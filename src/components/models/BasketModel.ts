@@ -14,12 +14,7 @@ export class BasketModel extends EventEmitter implements IBasket {
     }
 
     get costItems() {
-        let cost: number = 0;
-        
-        this._items.forEach(item => {   
-            if (item.price != null) cost += item.price;
-        })
-        return cost;
+        return this._items.reduce((cost, item) => cost + item.price, 0);;
     }
 
     get items() {
@@ -40,6 +35,11 @@ export class BasketModel extends EventEmitter implements IBasket {
     clear() {
         this._items = [];
         this.emit('changeCountItem');
+    }
+
+    checkItemById(id: string): boolean {
+        return (this._items.find(element => element.id === id) != undefined);
+
     }
 }
 

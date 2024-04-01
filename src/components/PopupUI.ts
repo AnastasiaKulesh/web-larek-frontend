@@ -15,9 +15,8 @@ export class PopupUI implements IPopup {
         this._content.addEventListener('click', (event) => event.stopPropagation());        
     }
 
-    set content(value: HTMLElement) {
-        this._content.innerHTML = '';
-        this._content.appendChild(value); 
+    set content(value: HTMLElement) {   
+        this._content.replaceChildren(value); 
     }
 
     open() {
@@ -26,7 +25,6 @@ export class PopupUI implements IPopup {
 
     close() {
         this.container.classList.remove('modal_active');
-        this._content = null;
     }
 
 }

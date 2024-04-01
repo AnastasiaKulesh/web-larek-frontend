@@ -28,13 +28,15 @@ export class CardUI {
         this.deleteBasketItemButton = this.cardElement.querySelector('.basket__item-delete');
     }
 
-    render(card: ICard, idx: number) {
+    render(card: ICard, idx: number = 0, buttonIsDisabled: boolean = false) {
         if (this.categoryElement != null) this.categoryElement.textContent = card.category;
         if (this.nameElement != null) this.nameElement.textContent = card.title;
         if (this.descriptionElement != null) this.descriptionElement.textContent = card.description;
         if (this.imageElement != null) this.imageElement.src = `${CDN_URL}/${card.image}`;
         if (this.priceElement != null) (card.price == null) ? this.priceElement.textContent = 'Бесценно' : this.priceElement.textContent = `${card.price} cинапсов`;
         if (this.basketItemElement != null) this.basketItemElement.textContent = `${idx+1}`;
+        if (this.addBasketItemButton != null) this.addBasketItemButton.disabled = buttonIsDisabled;
+        
         return this.cardElement;
     }
 

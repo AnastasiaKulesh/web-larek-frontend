@@ -9,7 +9,6 @@ export interface ICard {
 
 export interface ICardsList {
     cards: ICard[];
-    getCardById(id: string): ICard;
 }
 
 export interface ICustomer {
@@ -21,6 +20,7 @@ export interface ICustomer {
     setAddress(address: string): void;
     setEmail(email: string): void;
     setPhone(phone: string): void;
+    clear(): void;
     // validate(inputElement: HTMLElement): boolean;
 }
 
@@ -30,6 +30,7 @@ export interface IBasket {
     readonly costItems: number;
     addItem(item: ICard): void;
     deleteItem(id: string): void;
+    checkItemById(id: string): boolean;
     clear(): void;
 }
 
